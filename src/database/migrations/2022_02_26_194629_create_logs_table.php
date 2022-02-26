@@ -13,6 +13,7 @@ class CreateLogsTable extends Migration
      */
     public function up()
     {
+        Schema::connection('mongodb')->dropIfExists('logs');
         Schema::connection('mongodb')->create('logs', function (Blueprint $table) {
             $table->id();
             $table->string('controller_name');

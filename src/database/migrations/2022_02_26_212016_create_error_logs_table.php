@@ -13,6 +13,7 @@ class CreateErrorLogsTable extends Migration
      */
     public function up()
     {
+        Schema::connection('mongodb')->dropIfExists('error_logs');
         Schema::connection('mongodb')->create('error_logs', function (Blueprint $table) {
             $table->id();
             $table->string('controller_name');

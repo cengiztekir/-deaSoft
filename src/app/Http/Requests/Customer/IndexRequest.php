@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Asal;
+namespace App\Http\Requests\Customer;
 
 use App\Http\Requests\Request;
 use App\Traits\HasFilterRequest;

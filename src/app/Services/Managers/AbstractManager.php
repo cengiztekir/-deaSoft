@@ -21,7 +21,7 @@ class AbstractManager
             $message = sprintf('%s_SYSTEM_FAIL',Str::upper($this->modelName));
 
             $errorLogManager = new ErrorLogManager();
-            $errorLogManager->storeLog(Str::upper($this->modelName), $message, $query, $e);
+            $errorLogManager->storeLog(Str::upper($this->modelName), $message, $query, $e->getMessage());
 
             throw new CustomException($message);
         }
@@ -38,7 +38,7 @@ class AbstractManager
             $message = sprintf('%s_SYSTEM_FAIL',Str::upper($this->modelName));
             
             $errorLogManager = new ErrorLogManager();
-            $errorLogManager->storeLog(Str::upper($this->modelName), $message, $query, $e);
+            $errorLogManager->storeLog(Str::upper($this->modelName), $message, $query, $e->getMessage());
 
             throw new CustomException($message);
         }
@@ -59,7 +59,7 @@ class AbstractManager
             $message = sprintf('%s_NOT_CREATED',Str::upper($this->modelName));
 
             $errorLogManager = new ErrorLogManager();
-            $errorLogManager->storeLog(Str::upper($this->modelName), $message, $data, $e);
+            $errorLogManager->storeLog(Str::upper($this->modelName), $message, $data, $e->getMessage());
 
             throw new CustomException($message);
         }
@@ -77,7 +77,7 @@ class AbstractManager
             $message = sprintf('%s_NOT_UPDATED',Str::upper($this->modelName));
 
             $errorLogManager = new ErrorLogManager();
-            $errorLogManager->storeLog(Str::upper($this->modelName), $message, $data, $e);
+            $errorLogManager->storeLog(Str::upper($this->modelName), $message, $data, $e->getMessage());
 
             throw new CustomException($message);
         }
@@ -95,7 +95,7 @@ class AbstractManager
             $message = sprintf('%s_NOT_DELETED',Str::upper($this->modelName));
 
             $errorLogManager = new ErrorLogManager();
-            $errorLogManager->storeLog(Str::upper($this->modelName), $message, $query, $e);
+            $errorLogManager->storeLog(Str::upper($this->modelName), $message, $query, $e->getMessage());
 
             throw new CustomException($message);
         }
@@ -111,7 +111,7 @@ class AbstractManager
             $message = sprintf('%s_SYSTEM_FAIL',Str::upper($this->modelName));
 
             $errorLogManager = new ErrorLogManager();
-            $errorLogManager->storeLog(Str::upper($this->modelName), $message, $query, $e);
+            $errorLogManager->storeLog(Str::upper($this->modelName), $message, $query, $e->getMessage());
 
             throw new CustomException($message);
         }
