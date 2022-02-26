@@ -33,6 +33,12 @@ Route::prefix('v1')->group(function () {
         Route::put('/customers/{id}',\App\Http\Controllers\Customer\UpdateController::class);
         Route::delete('/customers/{id}/',\App\Http\Controllers\Customer\DeleteController::class);
 
+        Route::get('/products',\App\Http\Controllers\Product\IndexController::class);
+        Route::post('/products',\App\Http\Controllers\Product\StoreController::class);
+        Route::get('/products/{id}/',\App\Http\Controllers\Product\ShowController::class);
+        Route::put('/products/{id}',\App\Http\Controllers\Product\UpdateController::class);
+        Route::delete('/products/{id}/',\App\Http\Controllers\Product\DeleteController::class);
+
         
     });
 });
