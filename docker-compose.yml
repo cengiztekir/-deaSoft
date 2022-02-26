@@ -1,0 +1,83 @@
+version: '3'
+
+services:
+  #PHP Service
+  laravel_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    tty: true
+    environment:
+      DB_HOST: laravel_db
+      DB_PORT: 5432
+      DB_DATABASE: database
+      DB_USERNAME: postgres
+      DB_PASSWORD: 123456
+
+    working_dir: /var/www
+    volumes:
+      - ./src:/var/www
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - app-network
+
+  #Nginx Service
+  laravel_webserver:
+    image: nginx:alpine
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "808:80"
+      - "4438:443"
+    volumes:
+      - ./src:/var/www
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - app-network
+
+  laravel_db:
+    image: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: database
+    volumes:
+      - ./volumes/dbdata:/var/lib/postgresql/data
+    ports:
+      - 54328:5432
+    networks:
+      - app-network
+
+  laravel_redis:
+        image: redis:latest
+        ports:
+            - 63798:6379
+        restart: always
+        networks:
+            - app-network
+
+  laravel_mongo:
+    image: mongo
+    container_name: mongodb
+    restart: unless-stopped
+    environment:
+        - MONGO_INITDB_DATABASE=laravel_mongodb
+        - MONGO_INITDB_ROOT_USERNAME=root
+        - MONGO_INITDB_ROOT_PASSWORD=123qwe
+    volumes:
+        - ./volumes/mongo:/data/db
+    ports:
+        - 27019:27017
+    networks:
+        - app-network
+
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge
+
+#Volumes
+volumes:
+  dbdata:
+    driver: local
