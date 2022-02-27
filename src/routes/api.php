@@ -39,6 +39,12 @@ Route::prefix('v1')->group(function () {
         Route::put('/products/{id}',\App\Http\Controllers\Product\UpdateController::class);
         Route::delete('/products/{id}/',\App\Http\Controllers\Product\DeleteController::class);
 
+        Route::get('/orders',\App\Http\Controllers\Order\IndexController::class);
+        Route::post('/orders',\App\Http\Controllers\Order\StoreController::class);
+        Route::get('/orders/{id}/',\App\Http\Controllers\Order\ShowController::class);
+        Route::put('/orders/{id}',\App\Http\Controllers\Order\UpdateController::class);
+        Route::delete('/orders/{id}/',\App\Http\Controllers\Order\DeleteController::class);
+
         
     });
 });
