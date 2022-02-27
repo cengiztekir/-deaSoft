@@ -20,6 +20,7 @@ class OrderItemRepository extends AbstractRepository
         return QueryBuilder::for(OrderItem::class, new Request($query))
         ->allowedFilters([
             AllowedFilter::exact('id'),
+            AllowedFilter::exact('order_id'),
             AllowedFilter::exact('product_id'),
             AllowedFilter::exact('quantity'),
             AllowedFilter::exact('unit_price'),

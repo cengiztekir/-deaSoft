@@ -19,11 +19,8 @@ class AbstractManager
             $models = $this->repository->filter($query);
         } catch (Exception $e) {
             $message = sprintf('%s_SYSTEM_FAIL',Str::upper($this->modelName));
-
-            $errorLogManager = new ErrorLogManager();
-            $errorLogManager->storeLog(Str::upper($this->modelName), $message, $query, $e->getMessage());
-
-            throw new CustomException($message);
+            
+            $this->errorExcptionLog($message, $query, $e->getMessage());
         }
         
         return $models;
@@ -37,10 +34,7 @@ class AbstractManager
         } catch (Exception $e) {
             $message = sprintf('%s_SYSTEM_FAIL',Str::upper($this->modelName));
             
-            $errorLogManager = new ErrorLogManager();
-            $errorLogManager->storeLog(Str::upper($this->modelName), $message, $query, $e->getMessage());
-
-            throw new CustomException($message);
+            $this->errorExcptionLog($message, $query, $e->getMessage());
         }
 
         if (!$model) {
@@ -57,11 +51,8 @@ class AbstractManager
             $model = $this->repository->create($data)->refresh();
         } catch (Exception $e) {
             $message = sprintf('%s_NOT_CREATED',Str::upper($this->modelName));
-
-            $errorLogManager = new ErrorLogManager();
-            $errorLogManager->storeLog(Str::upper($this->modelName), $message, $data, $e->getMessage());
-
-            throw new CustomException($message);
+            
+            $this->errorExcptionLog($message, $data, $e->getMessage());
         }
         
         return $model;
@@ -75,11 +66,8 @@ class AbstractManager
             $result = $this->repository->update($query, $data);
         } catch (Exception $e) {
             $message = sprintf('%s_NOT_UPDATED',Str::upper($this->modelName));
-
-            $errorLogManager = new ErrorLogManager();
-            $errorLogManager->storeLog(Str::upper($this->modelName), $message, $data, $e->getMessage());
-
-            throw new CustomException($message);
+            
+            $this->errorExcptionLog($message, $data, $e->getMessage());
         }
         
         return $result;
@@ -93,11 +81,8 @@ class AbstractManager
             $result = $this->repository->delete($query);
         } catch (Exception $e) {
             $message = sprintf('%s_NOT_DELETED',Str::upper($this->modelName));
-
-            $errorLogManager = new ErrorLogManager();
-            $errorLogManager->storeLog(Str::upper($this->modelName), $message, $query, $e->getMessage());
-
-            throw new CustomException($message);
+            
+            $this->errorExcptionLog($message, $query, $e->getMessage());
         }
         
         return $result;
@@ -110,13 +95,18 @@ class AbstractManager
         } catch (Exception $e) {
             $message = sprintf('%s_SYSTEM_FAIL',Str::upper($this->modelName));
 
-            $errorLogManager = new ErrorLogManager();
-            $errorLogManager->storeLog(Str::upper($this->modelName), $message, $query, $e->getMessage());
-
-            throw new CustomException($message);
+            $this->errorExcptionLog($message, $query, $e->getMessage());
         }
 
         return $models;
 
+    }
+
+    public function errorExcptionLog($message, $data, $error)
+    {
+        $errorLogManager = new ErrorLogManager();
+        $errorLogManager->storeLog(Str::upper($this->modelName), $message, $data, $error);
+
+        throw new CustomException($message);
     }
 }

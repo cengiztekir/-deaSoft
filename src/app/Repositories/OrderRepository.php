@@ -21,9 +21,8 @@ class OrderRepository extends AbstractRepository
         ->allowedFilters([
             AllowedFilter::exact('id'),
             AllowedFilter::exact('customer_id'),
-            AllowedFilter::exact('total'),
         ])
         ->defaultSort('-id')
-        ->allowedSorts(['id','customer_id','customer_id']);
+        ->allowedSorts(['id','customer_id']);
     }
 }

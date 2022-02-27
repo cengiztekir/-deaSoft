@@ -22,7 +22,8 @@ class OrderResource extends JsonResource
         return [
             'id' => $this->id,
             'customer_id' => $this->customer_id,
-            'total' => $this->total
+            'items' => OrderItemResource::collection($this->orderItems),
+            'total' => $this->orderItems->sum('total')
         ];
     }
 }

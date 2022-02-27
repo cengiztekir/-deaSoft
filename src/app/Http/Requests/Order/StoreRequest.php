@@ -14,7 +14,10 @@ class StoreRequest extends Request
     public function rules()
     {
         return [
-            'customer_id' => ['required', 'integer', 'exists:customers,id']
+            'customer_id' => ['required', 'integer', 'exists:customers,id'],
+            'items' => ['required', 'array'],
+            'items.*.product_id' => ['required', 'integer', 'exists:products,id', 'distinct'],
+            'items.*.quantity' => ['required', 'integer']
         ];
 
     }
