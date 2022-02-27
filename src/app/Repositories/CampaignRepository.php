@@ -26,7 +26,8 @@ class CampaignRepository extends AbstractRepository
             AllowedFilter::exact('min_quantity'),
             AllowedFilter::exact('discount_quantity'),
             AllowedFilter::exact('min_amount'),
-            AllowedFilter::exact('discount_rate'),
+            AllowedFilter::exact('discount_rate'),  
+            AllowedFilter::scope('greater_than_min_amount')
         ])
         ->defaultSort('-id')
         ->allowedSorts(['id','type','category','min_quantity','discount_quantity','min_amount','discount_rate']);

@@ -204,4 +204,77 @@ class OrderManager extends AbstractManager
         
         return $result;
     }
+
+    public function calculateDiscounts(int $id)
+    {
+        $order = $this->getModel($id);
+        $result = [
+            'order_id' => $order->id,
+            'discounts' => [],
+            'total_discount' => 0,
+            'discounted_total' => $order->orderItems->sum('total')
+        ];
+
+        $campaignManager = app()->make(CampaignManager::class);
+        $orderCampaigns = $campaignManager->allowedOrderCampaigns($order);
+
+        foreach($orderCampaigns as $orderCampaign) {
+            $discountAmount = $result['discounted_total']*$orderCampaign['discount_rate']/100;
+            $result['total_discount'] +=  $discountAmount;
+            $result['discounted_total'] -=  $discountAmount;
+
+            $result['discounts'][] = [
+                'discount_reason' => $orderCampaign['reasonn'],
+                'discount_amount' => $discountAmount,
+                'sub_total' => $result['discounted_total']
+            ];
+        }
+
+        $orderItemCampaigns = $campaignManager->allowedOrderItemCampaigns($order);
+
+        foreach($orderItemCampaigns as $orderItemCampaign) {
+            if($orderItemCampaign['type'] == 3){
+                $filteredOrderItems = $order->orderItems->filter(function ($item, $key) use ($orderItemCampaign) {
+                    return $item->product->category == $orderItemCampaign['category'];
+                })->sortBy('unit_price');
+
+                if($filteredOrderItems->count() >= $orderItemCampaign['min_quantity']) {
+                    $filteredOrderItem = $filteredOrderItems->first();
+
+                    $discountAmount = $filteredOrderItem->total*$orderItemCampaign['discount_rate']/100;
+
+                    $result['total_discount'] +=  $discountAmount;
+                    $result['discounted_total'] -=  $discountAmount;
+
+                    $result['discounts'][] = [
+                        'discount_reason' => $orderItemCampaign['reasonn'],
+                        'discount_amount' => $discountAmount,
+                        'sub_total' => $result['discounted_total']
+                    ];
+                    continue;
+                }
+            }
+            if($orderItemCampaign['type'] == 2) {
+                $filteredOrderItems = $order->orderItems->filter(function ($item, $key) use ($orderItemCampaign) {
+                    return $item->product->category == $orderItemCampaign['category'] && $item->quantity >= $orderItemCampaign['min_quantity'];
+                });
+                foreach($filteredOrderItems as $filteredOrderItem) {
+                    $discountAmount = $filteredOrderItem->unit_price*$orderItemCampaign['discount_quantity'];
+                    
+                    $result['total_discount'] +=  $discountAmount;
+                    $result['discounted_total'] -=  $discountAmount;
+
+                    $result['discounts'][] = [
+                        'discount_reason' => $orderItemCampaign['reasonn'],
+                        'discount_amount' => $discountAmount,
+                        'sub_total' => $result['discounted_total']
+                    ];
+                }
+                
+                continue;
+            }
+        }
+        
+        return $result;
+    }
 }
